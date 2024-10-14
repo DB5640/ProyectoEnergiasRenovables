@@ -1,4 +1,4 @@
-public class EnergiaGeotermica {
+public class EnergiaGeotermica extends EnergiaRenovable {
     public float gradienteGeotermico;
     public float conductividadTermica;
 }
