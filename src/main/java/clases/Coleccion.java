@@ -1,3 +1,5 @@
+package clases;
+
 import java.util.List;
 
 public class Coleccion extends Region {

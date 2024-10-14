@@ -1,8 +1,10 @@
+package clases;
+
 public class Region implements IEnergia {
     public String nombre;
 
     public void calcularConsumoVsProduccion() {
-        System.out.println("Consumo vs produccion");
+        System.out.println("controller.Consumo vs produccion");
     }
 
     @Override

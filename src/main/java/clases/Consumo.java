@@ -1,3 +1,5 @@
+package clases;
+
 import java.util.Date;
 
 public class Consumo {
@@ -7,6 +9,6 @@ public class Consumo {
     public double cantidadEnergia;
 
     public void calcularConsumo() {
-        System.out.println("Calcular Consumo");
+        System.out.println("Calcular controller.Consumo");
     }
 }

@@ -1,3 +1,5 @@
+package clases;
+
 public interface IEnergia {
     public void calcularProduccion();
     public void calcularConsumo();

@@ -1,3 +1,5 @@
+package clases;
+
 public class EnergiaHidroelectrica extends EnergiaRenovable {
 
 public double alturaCaida;
