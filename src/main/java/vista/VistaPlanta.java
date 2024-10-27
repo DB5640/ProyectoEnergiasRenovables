@@ -30,7 +30,7 @@ public class VistaPlanta extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JTextField textId;
-	private JTextField textPais;
+	private JTextField textNombre;
 	private JTextField textCodigo;
 	private JTextField textProduccion;
     private PaisController paisController;
@@ -151,11 +151,11 @@ public class VistaPlanta extends JInternalFrame {
 		lblNewLabel_2.setBounds(20, 96, 46, 14);
 		panel_2.add(lblNewLabel_2);
 		
-		textPais = new JTextField();
-		textPais.setBorder(null);
-		textPais.setBounds(93, 93, 86, 20);
-		panel_2.add(textPais);
-		textPais.setColumns(10);
+		textNombre = new JTextField();
+		textNombre.setBorder(null);
+		textNombre.setBounds(93, 93, 86, 20);
+		panel_2.add(textNombre);
+		textNombre.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("PAIS");
 		lblNewLabel_3.setBounds(189, 96, 46, 14);
@@ -212,7 +212,7 @@ public class VistaPlanta extends JInternalFrame {
     }
 	
 	private void consultar() throws SQLException {        
-        String  nombre = textPais.getText();        
+        String  nombre = textNombre.getText();        
         pais = paisController.consultarPais(nombre);
         if (pais  == null) {
             JOptionPane.showMessageDialog(this, "PAIS NO ENCONTRADO");
