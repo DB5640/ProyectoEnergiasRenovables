@@ -15,31 +15,43 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import clases.Pais;
-import controlador.PaisController;
-import model.PaisModel;
+import clases.Planta;
+import clases.TipoEnergia;
+import controlador.PlantaController;
+import controlador.TipoEnergiaController;
 
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.JList;
+import javax.swing.JComboBox;
 
 public class VistaPlanta extends JInternalFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private JTextField textId;
-	private JTextField textNombre;
-	private JTextField textCodigo;
-	private JTextField textProduccion;
-    private PaisController paisController;
-    private Pais pais;
+	private JTextField textIdPlanta;
+	private JTextField textPais;
+	private JTextField textCapacidad;
+	private JComboBox<TipoEnergia> combxTipoEnergia;
+    private PlantaController plantaController;
+    private Planta planta;
     DefaultTableModel tableModel= new DefaultTableModel();
 	/**
 	 * Launch the application.
 	 */
-    
+    private TipoEnergiaController tipoEnergiaController;
+    private static TipoEnergia energia = new TipoEnergia(); 
+    private List<TipoEnergia> listaenergia;    
+   
+    // Primero, un Map para almacenar los objetos por su PK
+    Map<Integer, TipoEnergia> comboMap = new HashMap<>();
+
    
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -58,10 +70,11 @@ public class VistaPlanta extends JInternalFrame {
 	 * @throws SQLException 
 	 */
 	public VistaPlanta() throws SQLException {
-		
-		paisController = new PaisController();
-		pais = new Pais();
-		
+       
+
+		tipoEnergiaController = new TipoEnergiaController();
+		 plantaController= new PlantaController();
+
 		
 		setBounds(0, 0, 778, 400);
 		getContentPane().setLayout(null);
@@ -116,82 +129,89 @@ public class VistaPlanta extends JInternalFrame {
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
 			},
 			new String[] {
-				"comlum1", "colum2", "colum3", "colum4"
+				"comlum1", "colum2", "colum3", "colum4","colum5"
 			}
 		));
 		table.setBounds(0, 0, 537,120);
 		
-		String[] titulostabla =new String[] {"ID","CODIGO","PAIS"};
+		String[] titulostabla =new String[] {"ID PLANTA","TIPO ENERGIA","CAPACIDAD","AÑO","PAIS"};
 		tableModel.setColumnIdentifiers(titulostabla);
 		table.setModel(tableModel);
-		vistaListarPais();
+		
+	
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(205, 54, 557, 145);
 		getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		
-		textId = new JTextField();
-		textId.setBorder(null);
-		textId.setBounds(93, 42, 46, 26);
-		panel_2.add(textId);
-		textId.setColumns(10);
+		textIdPlanta = new JTextField();
+		textIdPlanta.setBorder(null);
+		textIdPlanta.setBounds(104, 5, 46, 26);
+		panel_2.add(textIdPlanta);
+		textIdPlanta.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("ID");
-		lblNewLabel_1.setBounds(42, 48, 24, 14);
+		lblNewLabel_1.setBounds(34, 11, 24, 14);
 		panel_2.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("NOMBRE");
-		lblNewLabel_2.setBounds(20, 96, 46, 14);
+		JLabel lblNewLabel_2 = new JLabel("TIPO ENERGIA");
+		lblNewLabel_2.setBounds(210, 37, 80, 25);
 		panel_2.add(lblNewLabel_2);
 		
-		textNombre = new JTextField();
-		textNombre.setBorder(null);
-		textNombre.setBounds(93, 93, 86, 20);
-		panel_2.add(textNombre);
-		textNombre.setColumns(10);
-		
 		JLabel lblNewLabel_3 = new JLabel("PAIS");
-		lblNewLabel_3.setBounds(189, 96, 46, 14);
+		lblNewLabel_3.setBounds(34, 48, 46, 14);
 		panel_2.add(lblNewLabel_3);
 		
-		textCodigo = new JTextField();
-		textCodigo.setBorder(null);
-		textCodigo.setBounds(245, 93, 86, 20);
-		panel_2.add(textCodigo);
-		textCodigo.setColumns(10);
+		textPais = new JTextField();
+		textPais.setBorder(null);
+		textPais.setBounds(104, 45, 86, 20);
+		panel_2.add(textPais);
+		textPais.setColumns(10);
 		
 		JLabel lblNewLabel_4 = new JLabel("CAPACIDAD");
-		lblNewLabel_4.setBounds(341, 96, 75, 14);
+		lblNewLabel_4.setBounds(34, 91, 75, 14);
 		panel_2.add(lblNewLabel_4);
 		
-		textProduccion = new JTextField();
-		textProduccion.setBorder(null);
-		textProduccion.setBounds(426, 93, 86, 20);
-		panel_2.add(textProduccion);
-		textProduccion.setColumns(10);
+		textCapacidad = new JTextField();
+		textCapacidad.setBorder(null);
+		textCapacidad.setBounds(104, 88, 86, 20);
+		panel_2.add(textCapacidad);
+		textCapacidad.setColumns(10);
 		
 		JLabel lblNewLabel_5 = new JLabel("FECHA INICIAL");
-		lblNewLabel_5.setBounds(160, 48, 86, 20);
+		lblNewLabel_5.setBounds(439, 8, 86, 20);
 		panel_2.add(lblNewLabel_5);
 		
-		JList list = new JList();
-		list.setBounds(256, 47, 86, 20);
+		JList<?> list = new JList<Object>();
+		list.setBounds(439, 76, 86, 20);
 		panel_2.add(list);
 		
 		JLabel lblNewLabel_6 = new JLabel("FECHA FINAL");
-		lblNewLabel_6.setBounds(343, 48, 86, 20);
+		lblNewLabel_6.setBounds(439, 57, 86, 20);
 		panel_2.add(lblNewLabel_6);
 		
-		JList list_1 = new JList();
-		list_1.setBounds(426, 47, 86, 20);
+		JList<?> list_1 = new JList<Object>();
+		list_1.setBounds(439, 28, 86, 20);
 		panel_2.add(list_1);
+		
+		JButton btnFiltrar = new JButton("FILTRAR");
+		btnFiltrar.setBounds(436, 111, 89, 23);
+		panel_2.add(btnFiltrar);
+		
+	    combxTipoEnergia = new JComboBox<>();
+	    combxTipoEnergia.setToolTipText("");
+		combxTipoEnergia.setBounds(302, 38, 75, 22);
+		panel_2.add(combxTipoEnergia);
+		
+		
+		llenarCombos();
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(284, 11, 314, 32);
@@ -199,29 +219,54 @@ public class VistaPlanta extends JInternalFrame {
 		
 		JLabel lblNewLabel = new JLabel("FORMULARIO PLANTA");
 		panel_3.add(lblNewLabel);
-
+		vistaListarPlanta();
 	}
 	
-	public void vistaListarPais() throws SQLException{ 
+	public void vistaListarPlanta() throws SQLException{ 
         tableModel.setRowCount(0); // Limpiar la tabla
         
-        List<Pais> listado = paisController.listarPais();
-        listado.forEach((Pais) -> { 
-            tableModel.addRow(new Object[]{Pais.getId(), Pais.getCodigo(),Pais.getPais()});
-        }); 
+        List<Object[]> listado = plantaController.listarPlantaTabla();
+        for (Object[]fila : listado) {
+        	tableModel.addRow(fila);
+        }
     }
 	
 	private void consultar() throws SQLException {        
-        String  nombre = textNombre.getText();        
-        pais = paisController.consultarPais(nombre);
-        if (pais  == null) {
-            JOptionPane.showMessageDialog(this, "PAIS NO ENCONTRADO");
+        int  id =Integer.parseInt(textIdPlanta.getText());        
+        planta = plantaController.consultarPlanta(id);
+        if (planta  == null) {
+            JOptionPane.showMessageDialog(this, "ID NO ENCONTRADO");
         } else {
-            textId.setText(String.valueOf(pais.getId()));
-            textCodigo.setText(pais.getCodigo());
-           /* btnActualizar.setEnabled(true);
+            textCapacidad.setText(String.valueOf(planta.getCapacidad()));
+            textPais.setText(String.valueOf(planta.getId_tipoEnergia()));
+            
+            combxTipoEnergia.setSelectedItem(planta.getId_tipoEnergia());
+            //System.out.println(tipoEnergia.getId_tipoEnergia()+"combo");
+            TipoEnergia item= comboMap.get(planta.getId_tipoEnergia());
+            System.out.println(item);
+            if (item != null) {
+            	
+            	combxTipoEnergia.setSelectedItem(item);
+            	
+            }else {
+            	System.out.print(" es null");
+            }
+            
+            /* btnActualizar.setEnabled(true);
             btnEliminar.setEnabled(true);
             btnInsertar.setEnabled(false);*/
         }
     }
+	
+	
+	
+	private void llenarCombos() throws SQLException {        
+		 List<TipoEnergia> listado = tipoEnergiaController.listarTipoEnergia();
+        for (TipoEnergia item : listado) {
+        	combxTipoEnergia.addItem(item);
+            comboMap.put(item.getId_tipoEnergia(), item);
+        }
+       
+    }
+
 }

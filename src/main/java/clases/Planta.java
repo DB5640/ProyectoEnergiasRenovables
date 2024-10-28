@@ -2,42 +2,80 @@ package clases;
 
 import java.util.Date;
 
-public class Planta extends Region {
-    public double capacidadGeneracion;
-    public String region;
-    public Date anio;
+public class Planta extends TipoEnergia {
+    private double capacidad;
+    private int id_planta;
+    public Date año;
+    String nombreEnergia;
     
-	public Planta(double capacidadGeneracion, String region, Date anio) {
+    
+	public Planta( int id_planta,double capacidad, Date año,int id_tipoEnergia,String nombreEnergia) {
+		super(id_tipoEnergia,nombreEnergia);
+		this.capacidad = capacidad;
+		this.id_planta = id_planta;
+		this.año = año;
+		this.nombreEnergia= nombreEnergia;
+		System.out.println(nombreEnergia +"contru");
+	}
+
+	
+	
+
+	public Planta() {
 		super();
-		this.capacidadGeneracion = capacidadGeneracion;
-		this.region = region;
-		this.anio = anio;
 	}
 
-	public double getCapacidadGeneracion() {
-		return capacidadGeneracion;
+
+
+	public String getNombreEnergia() {
+		return nombreEnergia;
 	}
 
-	public void setCapacidadGeneracion(double capacidadGeneracion) {
-		this.capacidadGeneracion = capacidadGeneracion;
+
+
+
+
+
+
+
+
+	public void setNombreEnergia(String nombreEnergia) {
+		this.nombreEnergia = nombreEnergia;
 	}
 
-	public String getRegion() {
-		return region;
+
+
+
+
+
+
+
+
+	public double getCapacidad() {
+		return capacidad;
 	}
 
-	public void setRegion(String region) {
-		this.region = region;
+	public void setCapacidad(double capacidad) {
+		this.capacidad = capacidad;
 	}
 
-	public Date getAnio() {
-		return anio;
+	public int getId_planta() {
+		return id_planta;
 	}
 
-	public void setAnio(Date anio) {
-		this.anio = anio;
+	public void setId_planta(int id_planta) {
+		this.id_planta = id_planta;
 	}
-    
+
+	public Date getAño() {
+		return año;
+	}
+
+	public void setAño(Date año) {
+		this.año = año;
+	}
+
+
 	
     
 }

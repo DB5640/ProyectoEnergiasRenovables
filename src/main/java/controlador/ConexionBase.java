@@ -13,7 +13,7 @@ public class ConexionBase {
 	        	
 	        	try {
 	        		
-	        		connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC","root","");
+	        		connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/energiarenovable?serverTimezone=UTC","root","");
 	        	}catch (SQLException e) {
 	        		e.printStackTrace();
 	        	}
