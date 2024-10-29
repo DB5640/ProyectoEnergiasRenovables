@@ -3,7 +3,11 @@ package clases;
 import java.util.List;
 
 public class Coleccion extends Region {
-    public List<EnergiaRenovable> energia;
+    public Coleccion(int idRegion) {
+		super(idRegion);
+		// TODO Auto-generated constructor stub
+	}
+	public List<EnergiaRenovable> energia;
 
     public void calcularProduccionTotal(){}
 

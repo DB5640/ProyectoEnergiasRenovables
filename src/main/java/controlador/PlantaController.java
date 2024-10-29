@@ -9,6 +9,7 @@ import java.util.List;
 
 import clases.Pais;
 import clases.Planta;
+import clases.Region;
 import model.PlantaModel;
 
 
@@ -39,5 +40,10 @@ public class PlantaController {
 	public Planta consultarPlanta(int idPlanta) throws SQLException {
         return plantaModel.consultarPlanta(idPlanta);
     }
+	
+	public void agregarPlanta(Planta planta, Region region) throws SQLException {
+        plantaModel.agregarPlanta(planta, region);;
+    }
+
 
 }

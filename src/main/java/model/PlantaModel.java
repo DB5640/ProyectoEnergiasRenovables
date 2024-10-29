@@ -6,10 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import clases.Planta;
+import clases.Region;
 import controlador.ConexionBase;
 
 public class PlantaModel {
@@ -91,7 +94,7 @@ public class PlantaModel {
         
         if (resultSet.next()) {
             int capacidad = resultSet.getInt("capacidad");
-            Date año = resultSet.getDate("anio_planta");
+            Date año =resultSet.getDate("anio_planta");
             String tipoenergia = resultSet.getString("nombre_tipoenergia");
             System.out.println(tipoenergia +"model");
             int idTipoEnergia =resultSet.getInt("id_tipoenergia");
@@ -102,5 +105,15 @@ public class PlantaModel {
         return null;
     }
 
-    
+	public void agregarPlanta(Planta planta,Region region) throws SQLException {
+        String query = "INSERT INTO planta (capacidad,anio_planta,id_tipoenergia,id_region) VALUES (?,?,?,?)";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setDouble(1, planta.getCapacidad());
+        ps.setDate(2, (Date) planta.getAño());
+        ps.setInt(3, planta.getId_tipoEnergia());
+        ps.setInt(4, region.getIdRegion());
+        ps.executeUpdate();
+        ps.close();
+    }
+
 }

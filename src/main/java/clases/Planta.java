@@ -1,6 +1,8 @@
 package clases;
 
-import java.util.Date;
+import java.sql.Date;
+
+
 
 public class Planta extends TipoEnergia {
     private double capacidad;
@@ -15,7 +17,7 @@ public class Planta extends TipoEnergia {
 		this.id_planta = id_planta;
 		this.año = año;
 		this.nombreEnergia= nombreEnergia;
-		System.out.println(nombreEnergia +"contru");
+		
 	}
 
 	
@@ -67,13 +69,20 @@ public class Planta extends TipoEnergia {
 		this.id_planta = id_planta;
 	}
 
+
+
+
 	public Date getAño() {
 		return año;
 	}
 
+
+
+
 	public void setAño(Date año) {
 		this.año = año;
 	}
+
 
 
 	

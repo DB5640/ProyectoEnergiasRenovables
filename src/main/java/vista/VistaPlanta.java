@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 
 import clases.Pais;
 import clases.Planta;
+import clases.Region;
 import clases.TipoEnergia;
 import controlador.PlantaController;
 import controlador.TipoEnergiaController;
@@ -23,7 +24,11 @@ import controlador.TipoEnergiaController;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +56,7 @@ public class VistaPlanta extends JInternalFrame {
    
     // Primero, un Map para almacenar los objetos por su PK
     Map<Integer, TipoEnergia> comboMap = new HashMap<>();
+    private JTextField textAño;
 
    
 	public static void main(String[] args) {
@@ -85,7 +91,21 @@ public class VistaPlanta extends JInternalFrame {
 		panel.setLayout(null);
 		
 		JButton btnCrear = new JButton("CREAR");
-		
+		btnCrear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+		        if (! validarVacios()) {
+		            JOptionPane.showInputDialog(this, "Los campos con (*) son obligados");
+		          }
+		          else{
+		            insertar();
+		          }
+
+			
+			}
+		});
+		                                        
+
 		btnCrear.setBounds(10, 27, 121, 54);
 		panel.add(btnCrear);
 		
@@ -210,6 +230,11 @@ public class VistaPlanta extends JInternalFrame {
 		combxTipoEnergia.setBounds(302, 38, 75, 22);
 		panel_2.add(combxTipoEnergia);
 		
+		textAño = new JTextField();
+		textAño.setBounds(257, 88, 86, 20);
+		panel_2.add(textAño);
+		textAño.setColumns(10);
+		
 		
 		llenarCombos();
 		
@@ -268,5 +293,29 @@ public class VistaPlanta extends JInternalFrame {
         }
        
     }
+	
+	private void insertar() {
+        double capacidad = Double.parseDouble(textCapacidad.getText());
+        Date date= new Date (System.currentTimeMillis());
+        java.sql.Date año = new java.sql.Date(date.getTime());
+        TipoEnergia fkSelecionada=(TipoEnergia)combxTipoEnergia.getSelectedItem();
+        int tipoEnergia = fkSelecionada.getId_tipoEnergia();
+        int pais= Integer.parseInt(textPais.getText());
+        Planta planta= new Planta(0, capacidad,año,tipoEnergia,null);
+        Region region= new Region(pais);
+        try {
+            plantaController.agregarPlanta(planta, region);
+            JOptionPane.showMessageDialog(this, "Color agregado");
+            vistaListarPlanta();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
+	private boolean validarVacios() {
+	       boolean validado = false;
+	       if (!textCapacidad.getText().trim().isEmpty())
+	               validado = true;
+	       return validado;
+	    }
 }
