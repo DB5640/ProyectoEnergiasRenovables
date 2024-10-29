@@ -44,6 +44,16 @@ public class PlantaController {
 	public void agregarPlanta(Planta planta, Region region) throws SQLException {
         plantaModel.agregarPlanta(planta, region);;
     }
+	
+	public void actualizarPlanta(Planta planta) throws SQLException {
+        plantaModel.actualizarPlanta(planta);
+    }
+	
+	public void eliminarPlanta(int id) throws SQLException {
+        plantaModel.eliminarPlanta(id);
+    }
+
+
 
 
 }

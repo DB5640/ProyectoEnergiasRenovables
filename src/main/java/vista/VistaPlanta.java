@@ -35,6 +35,8 @@ import java.util.Map;
 
 import javax.swing.JList;
 import javax.swing.JComboBox;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VistaPlanta extends JInternalFrame {
 
@@ -43,6 +45,7 @@ public class VistaPlanta extends JInternalFrame {
 	private JTextField textIdPlanta;
 	private JTextField textPais;
 	private JTextField textCapacidad;
+	private JButton btnInsertar, btnActualizar,btnEliminar,btnBuscar;
 	private JComboBox<TipoEnergia> combxTipoEnergia;
     private PlantaController plantaController;
     private Planta planta;
@@ -90,8 +93,8 @@ public class VistaPlanta extends JInternalFrame {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JButton btnCrear = new JButton("CREAR");
-		btnCrear.addMouseListener(new MouseAdapter() {
+		btnInsertar = new JButton("CREAR");
+		btnInsertar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 		        if (! validarVacios()) {
@@ -106,22 +109,35 @@ public class VistaPlanta extends JInternalFrame {
 		});
 		                                        
 
-		btnCrear.setBounds(10, 27, 121, 54);
-		panel.add(btnCrear);
+		btnInsertar.setBounds(10, 27, 121, 54);
+		panel.add(btnInsertar);
 		
-		JButton btnActualizar = new JButton("ACTUALIZAR");
+		btnActualizar = new JButton("ACTUALIZAR");
+		btnActualizar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				actualizar();
+				limpiarFormulario();
+			}
+		});
 		btnActualizar.setBounds(10, 102, 121, 54);
 		panel.add(btnActualizar);
 		
-		JButton btnEliminar = new JButton("ELIMINAR");
+	    btnEliminar = new JButton("ELIMINAR");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					eliminar();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnEliminar.setBounds(10, 243, 121, 54);
 		panel.add(btnEliminar);
 		
-		JButton btnBuscar = new JButton("BUSCAR");
+		btnBuscar = new JButton("BUSCAR");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -172,6 +188,15 @@ public class VistaPlanta extends JInternalFrame {
 		panel_2.setLayout(null);
 		
 		textIdPlanta = new JTextField();
+		textIdPlanta.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				btnBuscar.setEnabled(true);
+				btnActualizar.setEnabled(true);
+	            btnEliminar.setEnabled(true);
+	            btnInsertar.setEnabled(false);
+			}
+		});
 		textIdPlanta.setBorder(null);
 		textIdPlanta.setBounds(104, 5, 46, 26);
 		panel_2.add(textIdPlanta);
@@ -230,11 +255,8 @@ public class VistaPlanta extends JInternalFrame {
 		combxTipoEnergia.setBounds(302, 38, 75, 22);
 		panel_2.add(combxTipoEnergia);
 		
-		textAño = new JTextField();
-		textAño.setBounds(257, 88, 86, 20);
-		panel_2.add(textAño);
-		textAño.setColumns(10);
-		
+	
+		inicializarBotonera();
 		
 		llenarCombos();
 		
@@ -277,9 +299,9 @@ public class VistaPlanta extends JInternalFrame {
             	System.out.print(" es null");
             }
             
-            /* btnActualizar.setEnabled(true);
+            btnActualizar.setEnabled(true);
             btnEliminar.setEnabled(true);
-            btnInsertar.setEnabled(false);*/
+            btnInsertar.setEnabled(false);
         }
     }
 	
@@ -305,12 +327,35 @@ public class VistaPlanta extends JInternalFrame {
         Region region= new Region(pais);
         try {
             plantaController.agregarPlanta(planta, region);
-            JOptionPane.showMessageDialog(this, "Color agregado");
+            JOptionPane.showMessageDialog(this, "la Planta fue agregado");
+            vistaListarPlanta();
+            limpiarFormulario(); 
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+	
+	private void actualizar() {
+        int id = Integer.parseInt(textIdPlanta.getText());
+        double capacidad =Double.parseDouble(textCapacidad.getText()) ;
+        Planta planta = new Planta(id, capacidad,null,0,null);
+        try {
+            plantaController.actualizarPlanta(planta);
+            JOptionPane.showMessageDialog(this, "Capacidad Actualizado");
             vistaListarPlanta();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
+
+	private void eliminar() throws SQLException {
+        int id = Integer.parseInt(textIdPlanta.getText());
+        plantaController.eliminarPlanta(id);        
+        this.limpiarFormulario();
+        vistaListarPlanta();
+        JOptionPane.showMessageDialog(this, "Registro eliminado exitosamente");
+    }
+
 
 	private boolean validarVacios() {
 	       boolean validado = false;
@@ -318,4 +363,19 @@ public class VistaPlanta extends JInternalFrame {
 	               validado = true;
 	       return validado;
 	    }
+	private void limpiarFormulario(){
+		textIdPlanta.setText("");
+		textPais.setText("");
+		textCapacidad.setText("");
+        inicializarBotonera();
+    } 
+	
+	private void inicializarBotonera(){       
+		btnInsertar.setEnabled(true);
+        btnActualizar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnBuscar.setEnabled(false);
+    }
+
+
 }

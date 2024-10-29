@@ -115,5 +115,24 @@ public class PlantaModel {
         ps.executeUpdate();
         ps.close();
     }
+	
+	public void actualizarPlanta(Planta planta) throws SQLException {
+        String query = "UPDATE planta SET capacidad = ?  WHERE id_planta = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setDouble(1, planta.getCapacidad());
+        ps.setInt(2, planta.getId_planta());
+        ps.executeUpdate();
+        ps.close();
+    }
+	
+	public void eliminarPlanta(int id) throws SQLException {
+        String query = "DELETE FROM planta WHERE id_planta = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, id);
+        ps.executeUpdate();
+        ps.close();
+    }
+
+
 
 }
