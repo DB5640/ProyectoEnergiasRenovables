@@ -96,11 +96,14 @@ public class PlantaModel {
             int capacidad = resultSet.getInt("capacidad");
             Date año =resultSet.getDate("anio_planta");
             String tipoenergia = resultSet.getString("nombre_tipoenergia");
-            System.out.println(tipoenergia +"model");
+            String nombreRegion=resultSet.getString("nombre_region");
+            System.out.print(nombreRegion);
             int idTipoEnergia =resultSet.getInt("id_tipoenergia");
             Planta planta = new Planta(0,capacidad,año,idTipoEnergia,tipoenergia);
+            Region region = new Region(0,nombreRegion);
             return planta;
-        }   
+        }  
+        resultSet.close();
         statement.close();      
         return null;
     }

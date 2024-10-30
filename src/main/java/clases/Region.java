@@ -3,17 +3,21 @@ package clases;
 public class Region implements IEnergia {
     private int idRegion;
 	public String nombre;
-
-    
-
-
+	
 	
 
-
-	public Region(int idRegion) {
+	public Region(int idRegion, String nombre) {
 		super();
 		this.idRegion = idRegion;
+		this.nombre = nombre;
+		  System.out.println(this.nombre);
 	}
+
+	public Region() {
+		super();
+	}
+
+
 
 
 	public void calcularConsumoVsProduccion() {
@@ -54,6 +58,13 @@ public class Region implements IEnergia {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
+
+	@Override
+	public String toString() {
+		return nombre;
+	}
     
+	
     
 }

@@ -8,52 +8,51 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import clases.Pais;
+import clases.Region;
 import controlador.ConexionBase;
 
-public class PaisModel {
+public class RegionModel {
 
 	private Connection connection;
 	
-    public PaisModel() {
+    public RegionModel() {
  	   
  	   connection= ConexionBase.getConenction();
     }
 
 	
-	public List<Pais> listarPais()throws SQLException {
+	public List<Region> listarRegion()throws SQLException {
 		
 		
-     List<Pais> paises = new ArrayList<>();
+     List<Region> Regiones = new ArrayList<>();
      String query = "SELECT * FROM region";
      Statement st = connection.createStatement();
      ResultSet rs = st.executeQuery(query);
 
      while (rs.next()) {
-         Pais pais= new Pais();
-         pais.setId(rs.getInt("id_pais"));
-         pais.setCodigo(rs.getString("codigo"));
-         pais.setPais(rs.getString("nombre"));
-         paises.add(pais);
+         Region Region= new Region();
+         Region.setIdRegion(rs.getInt("id_region"));
+         Region.setNombre(rs.getString("nombre_region"));
+         Regiones.add(Region);
          
      }
      rs.close();
      st.close();
-     return paises;
+     return Regiones;
 
 	}
 	
-	public Pais consultarPais(String nombre) throws SQLException {
+	public Region consultarRegion(String nombre) throws SQLException {
         String query = "SELECT * FROM region WHERE nombre = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, nombre);
         ResultSet resultSet = statement.executeQuery();
 
         if (resultSet.next()) {
-            int id = resultSet.getInt("id_pais");
+            int id = resultSet.getInt("id_Region");
             String codigo = resultSet.getString("codigo");
-            Pais pais = new Pais(id, codigo,null);
-            return pais;
+            Region Region = new Region();
+            return Region;
         }   
         statement.close();      
         return null;

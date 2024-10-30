@@ -15,7 +15,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import clases.Pais;
-import controlador.PaisController;
+import controlador.RegionController;
 import model.PaisModel;
 
 import javax.swing.JTextField;
@@ -32,7 +32,7 @@ public class VistaPais extends JInternalFrame {
 	private JTextField textPais;
 	private JTextField textCodigo;
 	private JTextField textProduccion;
-    private PaisController paisController;
+    private RegionController paisController;
     private Pais pais;
     DefaultTableModel tableModel= new DefaultTableModel();
 	/**
@@ -58,7 +58,7 @@ public class VistaPais extends JInternalFrame {
 	 */
 	public VistaPais() throws SQLException {
 		
-		paisController = new PaisController();
+		paisController = new RegionController();
 		pais = new Pais();
 		
 		

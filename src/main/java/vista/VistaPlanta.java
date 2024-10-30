@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -18,6 +20,7 @@ import clases.Pais;
 import clases.Planta;
 import clases.Region;
 import clases.TipoEnergia;
+import controlador.RegionController;
 import controlador.PlantaController;
 import controlador.TipoEnergiaController;
 
@@ -43,22 +46,22 @@ public class VistaPlanta extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JTextField textIdPlanta;
-	private JTextField textPais;
 	private JTextField textCapacidad;
 	private JButton btnInsertar, btnActualizar,btnEliminar,btnBuscar;
+	private JList <Region>listPais;
 	private JComboBox<TipoEnergia> combxTipoEnergia;
     private PlantaController plantaController;
     private Planta planta;
+    private Region region;
     DefaultTableModel tableModel= new DefaultTableModel();
-	/**
-	 * Launch the application.
-	 */
+    private RegionController regionController;
     private TipoEnergiaController tipoEnergiaController;
     private static TipoEnergia energia = new TipoEnergia(); 
     private List<TipoEnergia> listaenergia;    
    
     // Primero, un Map para almacenar los objetos por su PK
     Map<Integer, TipoEnergia> comboMap = new HashMap<>();
+    Map<Integer, Region> comboMapRegion = new HashMap<>();
     private JTextField textAño;
 
    
@@ -82,9 +85,9 @@ public class VistaPlanta extends JInternalFrame {
        
 
 		tipoEnergiaController = new TipoEnergiaController();
-		 plantaController= new PlantaController();
-
-		
+		plantaController= new PlantaController();
+        regionController = new RegionController();
+		region= new Region();
 		setBounds(0, 0, 778, 400);
 		getContentPane().setLayout(null);
 		
@@ -198,7 +201,7 @@ public class VistaPlanta extends JInternalFrame {
 			}
 		});
 		textIdPlanta.setBorder(null);
-		textIdPlanta.setBounds(104, 5, 46, 26);
+		textIdPlanta.setBounds(114, 5, 46, 26);
 		panel_2.add(textIdPlanta);
 		textIdPlanta.setColumns(10);
 		
@@ -207,18 +210,12 @@ public class VistaPlanta extends JInternalFrame {
 		panel_2.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("TIPO ENERGIA");
-		lblNewLabel_2.setBounds(210, 37, 80, 25);
+		lblNewLabel_2.setBounds(34, 42, 80, 25);
 		panel_2.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("PAIS");
-		lblNewLabel_3.setBounds(34, 48, 46, 14);
+		lblNewLabel_3.setBounds(284, 11, 46, 14);
 		panel_2.add(lblNewLabel_3);
-		
-		textPais = new JTextField();
-		textPais.setBorder(null);
-		textPais.setBounds(104, 45, 86, 20);
-		panel_2.add(textPais);
-		textPais.setColumns(10);
 		
 		JLabel lblNewLabel_4 = new JLabel("CAPACIDAD");
 		lblNewLabel_4.setBounds(34, 91, 75, 14);
@@ -226,7 +223,7 @@ public class VistaPlanta extends JInternalFrame {
 		
 		textCapacidad = new JTextField();
 		textCapacidad.setBorder(null);
-		textCapacidad.setBounds(104, 88, 86, 20);
+		textCapacidad.setBounds(114, 88, 86, 20);
 		panel_2.add(textCapacidad);
 		textCapacidad.setColumns(10);
 		
@@ -252,10 +249,19 @@ public class VistaPlanta extends JInternalFrame {
 		
 	    combxTipoEnergia = new JComboBox<>();
 	    combxTipoEnergia.setToolTipText("");
-		combxTipoEnergia.setBounds(302, 38, 75, 22);
+		combxTipoEnergia.setBounds(114, 43, 75, 22);
 		panel_2.add(combxTipoEnergia);
 		
-	
+		
+	    listPais = new JList();
+	    listPais.setBounds(104, 42, 51, 90);
+	    JScrollPane scrollLista = new JScrollPane();
+		scrollLista.setBounds(260, 42, 110, 66);
+		//panel_2.add(listPais);
+		scrollLista.setViewportView(listPais);
+		panel_2.add(scrollLista);
+		
+		llenarLista();
 		inicializarBotonera();
 		
 		llenarCombos();
@@ -285,18 +291,25 @@ public class VistaPlanta extends JInternalFrame {
             JOptionPane.showMessageDialog(this, "ID NO ENCONTRADO");
         } else {
             textCapacidad.setText(String.valueOf(planta.getCapacidad()));
-            textPais.setText(String.valueOf(planta.getId_tipoEnergia()));
-            
+            listPais.setSelectedValue(region.getNombre(), closable);
             combxTipoEnergia.setSelectedItem(planta.getId_tipoEnergia());
-            //System.out.println(tipoEnergia.getId_tipoEnergia()+"combo");
+           
             TipoEnergia item= comboMap.get(planta.getId_tipoEnergia());
-            System.out.println(item);
+            Region itemRegion= comboMapRegion.get(region.getNombre());
+            System.out.println(region.getNombre());
             if (item != null) {
             	
             	combxTipoEnergia.setSelectedItem(item);
+        	
+            }
+            
+           if (itemRegion != null) {
             	
-            }else {
-            	System.out.print(" es null");
+            	listPais.setSelectedValue(itemRegion, closable);
+            	System.out.print(listPais);
+        	
+            }else { 
+            	System.out.print("es null");
             }
             
             btnActualizar.setEnabled(true);
@@ -316,15 +329,29 @@ public class VistaPlanta extends JInternalFrame {
        
     }
 	
+	private void llenarLista() throws SQLException {        
+		 List<Region> listado = regionController.listarRegion();
+		 DefaultListModel modelo = new DefaultListModel();
+       
+		 for (Region item : listado) {
+    	   modelo.addElement(item);
+    	   listPais.setModel(modelo);
+    	   comboMapRegion.put(item.getIdRegion(), item);
+       }
+      
+   }
+	
+	
 	private void insertar() {
         double capacidad = Double.parseDouble(textCapacidad.getText());
         Date date= new Date (System.currentTimeMillis());
         java.sql.Date año = new java.sql.Date(date.getTime());
         TipoEnergia fkSelecionada=(TipoEnergia)combxTipoEnergia.getSelectedItem();
         int tipoEnergia = fkSelecionada.getId_tipoEnergia();
-        int pais= Integer.parseInt(textPais.getText());
+        Region fkpais=(Region) listPais.getSelectedValue();
+        int pais= fkpais.getIdRegion();
         Planta planta= new Planta(0, capacidad,año,tipoEnergia,null);
-        Region region= new Region(pais);
+        Region region= new Region(pais,null);
         try {
             plantaController.agregarPlanta(planta, region);
             JOptionPane.showMessageDialog(this, "la Planta fue agregado");
@@ -365,7 +392,7 @@ public class VistaPlanta extends JInternalFrame {
 	    }
 	private void limpiarFormulario(){
 		textIdPlanta.setText("");
-		textPais.setText("");
+		//textPais.setText("");
 		textCapacidad.setText("");
         inicializarBotonera();
     } 
@@ -376,6 +403,4 @@ public class VistaPlanta extends JInternalFrame {
         btnEliminar.setEnabled(false);
         btnBuscar.setEnabled(false);
     }
-
-
 }

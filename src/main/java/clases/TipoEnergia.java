@@ -1,5 +1,7 @@
 package clases;
 
+import javax.swing.ListModel;
+
 public class TipoEnergia {
  private int id_tipoEnergia;
  private String nombreEnergia;
@@ -13,7 +15,7 @@ public TipoEnergia(int id_tipoEnergia, String nombreEnergia) {
 	this.id_tipoEnergia = id_tipoEnergia;
 	this.nombreEnergia = nombreEnergia;
 	
-	System.out.println(id_tipoEnergia + "tipo");
+	
 }
 
 
@@ -42,12 +44,14 @@ public String getFuente() {
 public void setFuente(String fuente) {
 	this.fuente = fuente;
 }
- 
+
+
 @Override
 public String toString() {
-    return nombreEnergia; 
-     // Esto es importante para que el JComboBox muestre la descripción
+	return nombreEnergia;
 }
+ 
+
 
  
 }
