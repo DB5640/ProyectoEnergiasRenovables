@@ -18,7 +18,6 @@ import javax.swing.table.DefaultTableModel;
 
 import clases.Pais;
 import clases.Planta;
-import clases.Region;
 import clases.TipoEnergia;
 import controlador.RegionController;
 import controlador.PlantaController;
@@ -48,20 +47,20 @@ public class VistaPlanta extends JInternalFrame {
 	private JTextField textIdPlanta;
 	private JTextField textCapacidad;
 	private JButton btnInsertar, btnActualizar,btnEliminar,btnBuscar;
-	private JList <Region>listPais;
+	private JList <Pais>listPais;
 	private JComboBox<TipoEnergia> combxTipoEnergia;
     private PlantaController plantaController;
     private Planta planta;
-    private Region region;
+    private Pais Pais;
     DefaultTableModel tableModel= new DefaultTableModel();
-    private RegionController regionController;
+    private RegionController PaisController;
     private TipoEnergiaController tipoEnergiaController;
     private static TipoEnergia energia = new TipoEnergia(); 
     private List<TipoEnergia> listaenergia;    
    
     // Primero, un Map para almacenar los objetos por su PK
     Map<Integer, TipoEnergia> comboMap = new HashMap<>();
-    Map<Integer, Region> comboMapRegion = new HashMap<>();
+    Map<Integer, Pais> comboMapPais = new HashMap<>();
     private JTextField textAño;
 
    
@@ -86,8 +85,8 @@ public class VistaPlanta extends JInternalFrame {
 
 		tipoEnergiaController = new TipoEnergiaController();
 		plantaController= new PlantaController();
-        regionController = new RegionController();
-		region= new Region();
+        PaisController = new RegionController();
+		Pais= new Pais();
 		setBounds(0, 0, 778, 400);
 		getContentPane().setLayout(null);
 		
@@ -291,21 +290,21 @@ public class VistaPlanta extends JInternalFrame {
             JOptionPane.showMessageDialog(this, "ID NO ENCONTRADO");
         } else {
             textCapacidad.setText(String.valueOf(planta.getCapacidad()));
-            listPais.setSelectedValue(region.getNombre(), closable);
+            listPais.setSelectedValue(Pais.getNombre(), closable);
             combxTipoEnergia.setSelectedItem(planta.getId_tipoEnergia());
            
             TipoEnergia item= comboMap.get(planta.getId_tipoEnergia());
-            Region itemRegion= comboMapRegion.get(region.getNombre());
-            System.out.println(region.getNombre());
+            Pais itemPais= comboMapPais.get(Pais.getNombre());
+            System.out.println(Pais.getNombre());
             if (item != null) {
             	
             	combxTipoEnergia.setSelectedItem(item);
         	
             }
             
-           if (itemRegion != null) {
+           if (itemPais != null) {
             	
-            	listPais.setSelectedValue(itemRegion, closable);
+            	listPais.setSelectedValue(itemPais, closable);
             	System.out.print(listPais);
         	
             }else { 
@@ -330,13 +329,13 @@ public class VistaPlanta extends JInternalFrame {
     }
 	
 	private void llenarLista() throws SQLException {        
-		 List<Region> listado = regionController.listarRegion();
+		 List<Pais> listado = PaisController.listarRegion();
 		 DefaultListModel modelo = new DefaultListModel();
        
-		 for (Region item : listado) {
+		 for (Pais item : listado) {
     	   modelo.addElement(item);
     	   listPais.setModel(modelo);
-    	   comboMapRegion.put(item.getIdRegion(), item);
+    	   comboMapPais.put(item.getIdpais(), item);
        }
       
    }
@@ -348,12 +347,12 @@ public class VistaPlanta extends JInternalFrame {
         java.sql.Date año = new java.sql.Date(date.getTime());
         TipoEnergia fkSelecionada=(TipoEnergia)combxTipoEnergia.getSelectedItem();
         int tipoEnergia = fkSelecionada.getId_tipoEnergia();
-        Region fkpais=(Region) listPais.getSelectedValue();
-        int pais= fkpais.getIdRegion();
+        Pais fkpais=(Pais) listPais.getSelectedValue();
+        int pais= fkpais.getIdpais();
         Planta planta= new Planta(0, capacidad,año,tipoEnergia,null);
-        Region region= new Region(pais,null);
+        Pais Pais= new Pais(pais,null);
         try {
-            plantaController.agregarPlanta(planta, region);
+            plantaController.agregarPlanta(planta, Pais);
             JOptionPane.showMessageDialog(this, "la Planta fue agregado");
             vistaListarPlanta();
             limpiarFormulario(); 

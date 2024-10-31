@@ -1,9 +1,8 @@
 package clases;
 
-public class Pais {
-	private int  id;
-	private String codigo;
-    private String pais;
+public class Pais  {
+	private int  idPais;
+    private String nombre;
     
     
 
@@ -11,36 +10,39 @@ public class Pais {
 		super();
 	}
 
-	public Pais(int id, String codigo, String pais) {
+
+
+	public Pais(int idPais, String nombre) {
 		super();
-		this.id = id;
-		this.codigo = codigo;
-		this.pais = pais;
+		this.idPais = idPais;
+		this.nombre = nombre;
 	}
 
-	public int getId() {
-		return id;
+
+
+	public int getIdpais() {
+		return idPais;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+
+
+	public void setIdpais(int idpais) {
+		this.idPais = idpais;
 	}
 
-	public String getCodigo() {
-		return codigo;
+
+
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
-	public String getPais() {
-		return pais;
-	}
 
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
 
 	
     

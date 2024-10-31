@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import clases.Pais;
-import clases.Region;
+import clases.Planta;
 import model.RegionModel;
 
 
@@ -22,14 +22,21 @@ public class RegionController {
 		
 	}
 	
-	public  List<Region> listarRegion()throws SQLException {
+	public  List<Pais> listarRegion()throws SQLException {
         
 			
 				return regionModel.listarRegion();
     }
 
-	public Region consultarPais(String nombreRegion) throws SQLException {
-        return regionModel.consultarRegion(nombreRegion);
+	public Pais consultarPais(int idPais) throws SQLException {
+        return regionModel.consultarPais(idPais);
     }
 
+	public void actualizarPais(Pais pais) throws SQLException {
+        regionModel.actualizarPais(pais);
+    }
+	
+	public void eliminarPais(int id) throws SQLException {
+        regionModel.eliminarPais(id);
+    }
 }

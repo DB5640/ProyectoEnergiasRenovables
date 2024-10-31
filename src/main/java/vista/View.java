@@ -73,9 +73,9 @@ public class View extends JFrame {
 		
 		item1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VistaPais vistaPais= null;
+				VistaRegion vistaPais= null;
 				try {
-					vistaPais = new VistaPais();
+					vistaPais = new VistaRegion();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

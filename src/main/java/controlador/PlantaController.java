@@ -9,7 +9,6 @@ import java.util.List;
 
 import clases.Pais;
 import clases.Planta;
-import clases.Region;
 import model.PlantaModel;
 
 
@@ -41,8 +40,8 @@ public class PlantaController {
         return plantaModel.consultarPlanta(idPlanta);
     }
 	
-	public void agregarPlanta(Planta planta, Region region) throws SQLException {
-        plantaModel.agregarPlanta(planta, region);;
+	public void agregarPlanta(Planta planta, Pais pais) throws SQLException {
+        plantaModel.agregarPlanta(planta, pais);;
     }
 	
 	public void actualizarPlanta(Planta planta) throws SQLException {

@@ -11,8 +11,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import clases.Pais;
 import clases.Planta;
-import clases.Region;
+
 import controlador.ConexionBase;
 
 public class PlantaModel {
@@ -29,17 +30,20 @@ public class PlantaModel {
 		
 		
      List<Object[]> lista = new ArrayList<>();
-     String query = "SELECT * FROM planta";
+    // String query = "SELECT * FROM planta";
+     String query ="SELECT id_planta,tipo.nombre_tipoenergia as nombreenergia, capacidad, anio_planta, regi.nombre_region as nombreregion "
+     		+ " FROM planta as plan, region as regi, tipoenergia as tipo  WHERE id_planta = regi.id_region and id_planta = tipo.id_tipoenergia "
+     		+ " and plan.id_planta = plan.id_planta ";
      Statement st = connection.createStatement();
      ResultSet rs = st.executeQuery(query);
 
      while (rs.next()) {
          lista.add( new Object[] {
          rs.getInt("id_planta"),
-         rs.getString("id_tipoenergia"),
+         rs.getString("nombreenergia"),
          rs.getDouble("capacidad"),
          rs.getDate("anio_planta"),
-         rs.getInt("id_region")
+         rs.getString("nombreregion")
          });
          
      }
@@ -100,7 +104,7 @@ public class PlantaModel {
             System.out.print(nombreRegion);
             int idTipoEnergia =resultSet.getInt("id_tipoenergia");
             Planta planta = new Planta(0,capacidad,año,idTipoEnergia,tipoenergia);
-            Region region = new Region(0,nombreRegion);
+            Pais region = new Pais(0,nombreRegion);
             return planta;
         }  
         resultSet.close();
@@ -108,13 +112,13 @@ public class PlantaModel {
         return null;
     }
 
-	public void agregarPlanta(Planta planta,Region region) throws SQLException {
+	public void agregarPlanta(Planta planta,Pais region) throws SQLException {
         String query = "INSERT INTO planta (capacidad,anio_planta,id_tipoenergia,id_region) VALUES (?,?,?,?)";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setDouble(1, planta.getCapacidad());
         ps.setDate(2, (Date) planta.getAño());
         ps.setInt(3, planta.getId_tipoEnergia());
-        ps.setInt(4, region.getIdRegion());
+        ps.setInt(4, region.getIdpais());
         ps.executeUpdate();
         ps.close();
     }
