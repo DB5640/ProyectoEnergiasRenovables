@@ -59,7 +59,7 @@ public class RegionModel {
         return null;
     }
 	
-	public void agregarPlanta(Pais pais) throws SQLException {
+	public void agregarPais(Pais pais) throws SQLException {
         String query = "INSERT INTO region (nombre_region) VALUES (?)";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setString(1, pais.getNombre());
@@ -71,6 +71,7 @@ public class RegionModel {
         String query = "UPDATE region SET nombre_region = ?  WHERE id_region = ?";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setString(1, pais.getNombre());
+        ps.setInt(2, pais.getIdpais());
         ps.executeUpdate();
         ps.close();
     }

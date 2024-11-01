@@ -10,13 +10,22 @@ public class TipoEnergia {
  
 
 
-public TipoEnergia(int id_tipoEnergia, String nombreEnergia) {
+public TipoEnergia(int id_tipoEnergia, String nombreEnergia,String fuente) {
 	
 	this.id_tipoEnergia = id_tipoEnergia;
 	this.nombreEnergia = nombreEnergia;
-	
+	this.fuente=fuente;
 	
 }
+
+
+
+public TipoEnergia(int id_tipoEnergia, String nombreEnergia) {
+	super();
+	this.id_tipoEnergia = id_tipoEnergia;
+	this.nombreEnergia = nombreEnergia;
+}
+
 
 
 public TipoEnergia() {

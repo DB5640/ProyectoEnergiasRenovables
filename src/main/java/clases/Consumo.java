@@ -3,7 +3,7 @@ package clases;
 import java.util.Date;
 
 public class Consumo {
-    public Region pais;
+    public Pais pais;
     public Date anio;
     public EnergiaRenovable tipoEnergia;
     public double cantidadEnergia;

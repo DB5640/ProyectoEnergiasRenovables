@@ -106,7 +106,24 @@ public class View extends JFrame {
 		});
 		mnNewMenu.add(item2);
 		
-		
+		  JMenuItem item3= new JMenuItem("FORMULARIO TIPO ENERGIA");
+			
+			item3.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VistaTipoEnergia vistaTipoEnergia= null;
+					try {
+						vistaTipoEnergia = new VistaTipoEnergia();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					escritorio.add(vistaTipoEnergia);
+					vistaTipoEnergia.show();
+				}
+			});
+			mnNewMenu.add(item3);
+			
+			
 		
 	}
 }

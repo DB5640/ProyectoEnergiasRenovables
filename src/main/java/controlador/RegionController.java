@@ -32,6 +32,9 @@ public class RegionController {
         return regionModel.consultarPais(idPais);
     }
 
+	public void agregarPais(Pais pais) throws SQLException {
+        regionModel.agregarPais(pais);
+    }
 	public void actualizarPais(Pais pais) throws SQLException {
         regionModel.actualizarPais(pais);
     }

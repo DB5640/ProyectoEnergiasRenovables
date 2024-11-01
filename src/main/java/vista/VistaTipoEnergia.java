@@ -16,10 +16,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import clases.Pais;
+import clases.TipoEnergia;
 import clases.Planta;
 import clases.TipoEnergia;
-import controlador.RegionController;
+import controlador.TipoEnergiaController;
+import controlador.TipoEnergiaController;
 
 import javax.swing.JTextField;
 import javax.swing.plaf.synth.Region;
@@ -29,16 +30,17 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
-public class VistaRegion extends JInternalFrame {
+public class VistaTipoEnergia extends JInternalFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private JTextField textId;
-	private JTextField textPais;
-    private RegionController regionController;
-    private Pais pais;
+	private JTextField textIdTipoEnergia;
+	private JTextField textEnergia;
+    private TipoEnergiaController tipoEnergiaController;
+    private TipoEnergia tipoEnergia;
     private JButton btnInsertar, btnActualizar,btnEliminar,btnBuscar;
     DefaultTableModel tableModel= new DefaultTableModel();
+    private JTextField textFuente;
 	/**
 	 * Launch the application.
 	 */
@@ -48,7 +50,7 @@ public class VistaRegion extends JInternalFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VistaRegion frame = new VistaRegion();
+					VistaTipoEnergia frame = new VistaTipoEnergia();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -60,10 +62,10 @@ public class VistaRegion extends JInternalFrame {
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	public VistaRegion() throws SQLException {
+	public VistaTipoEnergia() throws SQLException {
 		
-		regionController = new RegionController();
-		pais = new Pais();
+		tipoEnergiaController = new TipoEnergiaController();
+		tipoEnergia = new TipoEnergia();
 		
 		
 		setBounds(0, 0, 778, 400);
@@ -148,20 +150,20 @@ public class VistaRegion extends JInternalFrame {
 		));
 		table.setBounds(0, 0, 537,120);
 		
-		String[] titulostabla =new String[] {"ID","PAIS"};
+		String[] titulostabla =new String[] {"ID","TIPO ENERGIA","FUENTE DE ENERGIA"};
 		tableModel.setColumnIdentifiers(titulostabla);
 		table.setModel(tableModel);
-		vistaListarPais();
+		vistaListarTipoEnergia();
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(183, 66, 557, 69);
 		getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		
-		textId = new JTextField();
-		textId.setBorder(null);
-		textId.setBounds(54, 11, 46, 26);
-		textId.addKeyListener(new KeyAdapter() {
+		textIdTipoEnergia = new JTextField();
+		textIdTipoEnergia.setBorder(null);
+		textIdTipoEnergia.setBounds(54, 11, 38, 26);
+		textIdTipoEnergia.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				btnBuscar.setEnabled(true);
@@ -170,22 +172,22 @@ public class VistaRegion extends JInternalFrame {
 	            btnInsertar.setEnabled(false);
 			}
 		});
-		panel_2.add(textId);
-		textId.setColumns(10);
+		panel_2.add(textIdTipoEnergia);
+		textIdTipoEnergia.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("ID");
 		lblNewLabel_1.setBounds(20, 17, 24, 14);
 		panel_2.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("PAIS");
-		lblNewLabel_2.setBounds(163, 17, 46, 14);
+		JLabel lblNewLabel_2 = new JLabel("TIPO ENERGIA");
+		lblNewLabel_2.setBounds(102, 17, 80, 14);
 		panel_2.add(lblNewLabel_2);
 		
-		textPais = new JTextField();
-		textPais.setBorder(null);
-		textPais.setBounds(219, 14, 130, 20);
-		panel_2.add(textPais);
-		textPais.setColumns(10);
+		textEnergia = new JTextField();
+		textEnergia.setBorder(null);
+		textEnergia.setBounds(192, 14, 89, 20);
+		panel_2.add(textEnergia);
+		textEnergia.setColumns(10);
 		
 		JButton btnLimpiar = new JButton("Limpiar");
 		btnLimpiar.addMouseListener(new MouseAdapter() {
@@ -194,36 +196,47 @@ public class VistaRegion extends JInternalFrame {
 				limpiarFormulario();
 			}
 		});
-		btnLimpiar.setBounds(428, 13, 89, 23);
+		btnLimpiar.setBounds(458, 13, 89, 23);
 		panel_2.add(btnLimpiar);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("FUENTE");
+		lblNewLabel_2_1.setBounds(291, 17, 50, 14);
+		panel_2.add(lblNewLabel_2_1);
+		
+		textFuente = new JTextField();
+		textFuente.setColumns(10);
+		textFuente.setBorder(null);
+		textFuente.setBounds(342, 14, 89, 20);
+		panel_2.add(textFuente);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(284, 23, 314, 32);
 		getContentPane().add(panel_3);
 		
-		JLabel lblNewLabel = new JLabel("FORMULARIO PAIS");
+		JLabel lblNewLabel = new JLabel("FORMULARIO TIPO ENERGIA");
 		panel_3.add(lblNewLabel);
         
 		inicializarBotonera();
 	}
 	
-	public void vistaListarPais() throws SQLException{ 
+	public void vistaListarTipoEnergia() throws SQLException{ 
         tableModel.setRowCount(0); // Limpiar la tabla
         
-        List<Pais> listado = regionController.listarRegion();
-        listado.forEach((Pais) -> { 
-            tableModel.addRow(new Object[]{Pais.getIdpais(),Pais.getNombre()});
+        List<TipoEnergia> listado = tipoEnergiaController.listarTipoEnergia();
+        listado.forEach((TipoEnergia) -> { 
+            tableModel.addRow(new Object[]{TipoEnergia.getId_tipoEnergia(),TipoEnergia.getNombreEnergia(),TipoEnergia.getFuente()});
         }); 
     }
 	
 	private void insertar() {
-        String nombrePais = textPais.getText();
-        Pais pais= new Pais(0,nombrePais);
+        String nombreTipoEnergia = textEnergia.getText();
+        String fuente = textFuente.getText();
+        TipoEnergia tipoEnergia= new TipoEnergia(0,nombreTipoEnergia,fuente);
         
         try {
-            regionController.agregarPais(pais);
-            JOptionPane.showMessageDialog(this, "El pais fue agregado");
-            vistaListarPais();
+            tipoEnergiaController.agregarTipoEnergia(tipoEnergia);
+            JOptionPane.showMessageDialog(this, "El Tipo de Energia fue agregado");
+            vistaListarTipoEnergia();
             limpiarFormulario(); 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -231,13 +244,14 @@ public class VistaRegion extends JInternalFrame {
     }
 	
 	private void actualizar() {
-        int id = Integer.parseInt(textId.getText());
-        String nombre= textPais.getText();
-        Pais pais = new Pais(id,nombre);
+        int id = Integer.parseInt(textIdTipoEnergia.getText());
+        String nombre= textEnergia.getText();
+        String fuente= textFuente.getText();
+        TipoEnergia tipoEnergia = new TipoEnergia(id,nombre,fuente);
         try {
-            regionController.actualizarPais(pais);
-            JOptionPane.showMessageDialog(this, "Pais Actualizado");
-            vistaListarPais();
+            tipoEnergiaController.actualizarTipoEnergia(tipoEnergia);
+            JOptionPane.showMessageDialog(this, "TipoEnergia Actualizado");
+            vistaListarTipoEnergia();
             limpiarFormulario();
             inicializarBotonera();
         } catch (SQLException ex) {
@@ -245,36 +259,37 @@ public class VistaRegion extends JInternalFrame {
         }
     }
 	private void consultar() throws SQLException {        
-        int  id = Integer.parseInt(textId.getText());        
-        pais = regionController.consultarPais(id);
-        if (pais  == null) {
-            JOptionPane.showMessageDialog(this, "PAIS NO ENCONTRADO");
+        int  id = Integer.parseInt(textIdTipoEnergia.getText());        
+        tipoEnergia = tipoEnergiaController.consultarTipoEnergia(id);
+        if (tipoEnergia  == null) {
+            JOptionPane.showMessageDialog(this, "TIPO DE ENERGIA NO ENCONTRADO");
         } else {
-            textPais.setText(String.valueOf(pais.getNombre()));
-            
+            textEnergia.setText(tipoEnergia.getNombreEnergia());
+            textFuente.setText(tipoEnergia.getFuente());
             btnActualizar.setEnabled(true);
             btnEliminar.setEnabled(true);
             btnInsertar.setEnabled(false);
         }
     }
 	private void eliminar() throws SQLException {
-        int id = Integer.parseInt(textId.getText());
-        regionController.eliminarPais(id);        
+        int id = Integer.parseInt(textIdTipoEnergia.getText());
+        tipoEnergiaController.eliminarTipoEnergia(id);        
         this.limpiarFormulario();
-        vistaListarPais();
+        vistaListarTipoEnergia();
         JOptionPane.showMessageDialog(this, "Registro eliminado exitosamente");
     }
 
 
 	private boolean validarVacios() {
 	       boolean validado = false;
-	       if (!textId.getText().trim().isEmpty())
+	       if (!textIdTipoEnergia.getText().trim().isEmpty())
 	               validado = true;
 	       return validado;
 	    }
 	private void limpiarFormulario(){
-		textId.setText("");
-		textPais.setText("");
+		textIdTipoEnergia.setText("");
+		textEnergia.setText("");
+		textFuente.setText("");
 	    inicializarBotonera();
     } 
 	
