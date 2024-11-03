@@ -203,7 +203,7 @@ public class VistaProduccion extends JInternalFrame {
 		panel_2.add(textProducAnual);
 		textProducAnual.setColumns(10);
 		
-		JLabel lblNewLabel_7 = new JLabel("PRODUCCIÓN POR PAIS");
+		JLabel lblNewLabel_7 = new JLabel("CAPACIDAD POR PAIS");
 		lblNewLabel_7.setBounds(576, 8, 137, 14);
 		panel_2.add(lblNewLabel_7);
 		
@@ -333,19 +333,20 @@ public class VistaProduccion extends JInternalFrame {
 	private void calcularProduccionPais() throws SQLException {
 		// int  id =Integer.parseInt(textIdPlanta.getText()); 
 		 Pais fkpais=(Pais) listPais.getSelectedValue();
-		 int idPais= fkpais.getIdpais();
-		 System.out.println( idPais);
-	     produccion = produccionController.producionPais(idPais);
-	       
-	        
-	        if (produccion  == null) {
-	            JOptionPane.showMessageDialog(this, "ID NO ENCONTRADO");
+		 if (fkpais  == null) {
+	            JOptionPane.showMessageDialog(this, "ELIGE UN PAIS");
 	        } else {
+		 int idPais= fkpais.getIdpais();
+		 
+	     produccion = produccionController.producionPais(idPais);
+	     System.out.println(produccion ); 
+	        
+	       
 	        	textCapaPais.setText(String.valueOf(produccion.getCapacidad()));
 	            listPais.setSelectedValue(pais.getIdpais(), closable);
 	            combxTipoEnergia.setSelectedItem(produccion.getId_tipoEnergia());
-	            //textProducAnual.setText(String.valueOf(produccion.produccionAnual(id)));
-	           // textProducMensual.setText(String.valueOf(produccion.produccionMensual(id)));
+	            textProducAnual.setText(String.valueOf(produccion.produccionAnual(idPais)));
+	            textProducMensual.setText(String.valueOf(produccion.produccionMensual(idPais)));
 	            TipoEnergia item= comboMap.get(produccion.getId_tipoEnergia());
 	            Pais itemPais= comboMapPais.get(pais.getIdpais());
 	            

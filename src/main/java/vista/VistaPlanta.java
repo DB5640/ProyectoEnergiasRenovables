@@ -194,8 +194,8 @@ public class VistaPlanta extends JInternalFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				btnBuscar.setEnabled(true);
-				btnActualizar.setEnabled(true);
-	            btnEliminar.setEnabled(true);
+				btnActualizar.setEnabled(false);
+	            btnEliminar.setEnabled(false);
 	            btnInsertar.setEnabled(false);
 			}
 		});
@@ -226,25 +226,15 @@ public class VistaPlanta extends JInternalFrame {
 		panel_2.add(textCapacidad);
 		textCapacidad.setColumns(10);
 		
-		JLabel lblNewLabel_5 = new JLabel("FECHA INICIAL");
-		lblNewLabel_5.setBounds(439, 8, 86, 20);
-		panel_2.add(lblNewLabel_5);
-		
-		JList<?> list = new JList<Object>();
-		list.setBounds(439, 76, 86, 20);
-		panel_2.add(list);
-		
-		JLabel lblNewLabel_6 = new JLabel("FECHA FINAL");
-		lblNewLabel_6.setBounds(439, 57, 86, 20);
-		panel_2.add(lblNewLabel_6);
-		
-		JList<?> list_1 = new JList<Object>();
-		list_1.setBounds(439, 28, 86, 20);
-		panel_2.add(list_1);
-		
-		JButton btnFiltrar = new JButton("FILTRAR");
-		btnFiltrar.setBounds(436, 111, 89, 23);
-		panel_2.add(btnFiltrar);
+		JButton btnLimpiar = new JButton("LIMPIAR");
+		btnLimpiar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				limpiarFormulario();
+			}
+		});
+		btnLimpiar.setBounds(424, 59, 89, 23);
+		panel_2.add(btnLimpiar);
 		
 	    combxTipoEnergia = new JComboBox<>();
 	    combxTipoEnergia.setToolTipText("");
