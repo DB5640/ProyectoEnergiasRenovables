@@ -18,9 +18,9 @@ public class Produccion extends Planta implements IEnergia {
 	super(id_planta, capacidad, año, id_tipoEnergia, nombreEnergia);
 	this.pais = pais;
 	
-	produccionHidraulicaAnual(capacidad);
+	produccionAnual(capacidad);
 	
-	produccionHidraulicaMensual(capacidad);
+	produccionMensual(capacidad);
 	
 }
 
@@ -29,7 +29,7 @@ public Produccion() {
     }
 
 @Override
-    public double produccionHidraulicaAnual(double capacidad) {
+    public double produccionAnual(double capacidad) {
     	double produccionAnual=0;
     	double produccionMensual;
     	
@@ -41,7 +41,7 @@ public Produccion() {
     	return produccionAnual;
      }
    @Override
-    public double produccionHidraulicaMensual(double capacidad) {
+    public double produccionMensual(double capacidad) {
 
     	double producionMensual;
     	

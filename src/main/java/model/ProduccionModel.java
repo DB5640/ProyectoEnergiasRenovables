@@ -24,7 +24,7 @@ public class ProduccionModel {
  	   energiaHidroelectica= new EnergiaHidroelectrica();
     }
     
-	public Produccion produccionHidraulicaModel(int id)throws SQLException {
+	public Produccion produccionModel(int id)throws SQLException {
 		
 	 String query = "SELECT id_planta, capacidad, anio_planta,p.id_region,nombre_region,nombre_tipoenergia,t.id_tipoenergia " +
              "FROM planta AS p "+
@@ -52,4 +52,30 @@ public class ProduccionModel {
      statement.close();      
      return null;
 	}
+	
+	public Produccion produccionPorPaisModel(int id)throws SQLException {
+		
+		 String query = " SELECT id_planta,SUM(capacidad)as sumCapacidad, anio_planta,p.id_region,nombre_region "
+		 		+ "FROM planta as p join region as r on p.id_region=r.id_region WHERE r.id_region= ?";
+	     PreparedStatement statement = connection.prepareStatement(query);
+	     statement.setInt(1, id);
+	     ResultSet resultSet = statement.executeQuery();
+	     
+	     if (resultSet.next()) {
+	         int capacidad = resultSet.getInt("sumCapacidad");
+	         Date año =resultSet.getDate("anio_planta");
+	        // int idTipoEnergia =resultSet.getInt("id_tipoenergia");
+	        // String nombreEnergia = resultSet.getString("nombre_tipoenergia");
+	         String nombrePais=resultSet.getString("nombre_region");
+	         int idRegion = resultSet.getInt("id_region");
+	         System.out.println(idRegion+ "produ");
+	         Pais pais = new Pais(idRegion,nombrePais);
+	         Produccion produccion = new Produccion(0,capacidad,año,0,null,pais);
+	        
+	        return produccion;
+	     }  
+	     resultSet.close();
+	     statement.close();      
+	     return null;
+		}
 }

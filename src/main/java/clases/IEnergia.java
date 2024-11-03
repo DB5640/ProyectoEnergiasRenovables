@@ -6,7 +6,7 @@ public interface IEnergia {
   //  public void calcularConsumoVsProduccion();
   //  public void calcularPorcentaje();
 	
-	public double produccionHidraulicaAnual(double capacidad);
+	public double produccionAnual(double capacidad);
 	
-	public double produccionHidraulicaMensual(double capacidad);
+	public double produccionMensual(double capacidad);
 }

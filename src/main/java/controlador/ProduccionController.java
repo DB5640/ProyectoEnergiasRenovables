@@ -18,8 +18,13 @@ public class ProduccionController {
 
 
 
-	public Produccion producionHidraulicaAnual(int id)throws SQLException {
+	public Produccion producionAnual(int id)throws SQLException {
 		
-		return produccionModel.produccionHidraulicaModel(id);
+		return produccionModel.produccionModel(id);
+	}
+	
+  public Produccion producionPais(int id)throws SQLException {
+		
+		return produccionModel.produccionPorPaisModel(id);
 	}
 }
