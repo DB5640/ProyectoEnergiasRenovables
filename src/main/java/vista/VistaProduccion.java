@@ -1,0 +1,449 @@
+package vista;
+
+import java.awt.EventQueue;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import clases.Pais;
+import clases.Planta;
+import clases.Produccion;
+import clases.TipoEnergia;
+import controlador.RegionController;
+import controlador.PlantaController;
+import controlador.ProduccionController;
+import controlador.TipoEnergiaController;
+
+import javax.swing.JTextField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.JList;
+import javax.swing.JComboBox;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class VistaProduccion extends JInternalFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JTable table;
+	private JTextField textIdPlanta;
+	private JTextField textCapacidad;
+	private JButton btnInsertar, btnActualizar,btnEliminar,btnBuscar;
+	private JList <Pais>listPais;
+	private JComboBox<TipoEnergia> combxTipoEnergia;
+    private PlantaController plantaController;
+    private Planta planta;
+    private Pais pais;
+    DefaultTableModel tableModel= new DefaultTableModel();
+    private RegionController PaisController;
+    private Produccion produccion;
+    private TipoEnergiaController tipoEnergiaController;
+    private ProduccionController produccionController;
+    private static TipoEnergia energia = new TipoEnergia(); 
+    private List<TipoEnergia> listaenergia;    
+   
+    // Primero, un Map para almacenar los objetos por su PK
+    Map<Integer, TipoEnergia> comboMap = new HashMap<>();
+    Map<Integer, Pais> comboMapPais = new HashMap<>();
+    private JTextField textAño;
+    private JTextField textProducMensual;
+    private JTextField textProducAnual;
+
+   
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VistaProduccion frame = new VistaProduccion();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	/**
+	 * Create the frame.
+	 * @throws SQLException 
+	 */
+	public VistaProduccion() throws SQLException {
+       
+        produccionController = new ProduccionController();
+		tipoEnergiaController = new TipoEnergiaController();
+		plantaController= new PlantaController();
+        PaisController = new RegionController();
+		pais= new Pais();
+		produccion = new Produccion();
+		setBounds(0, 0, 848, 427);
+		getContentPane().setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(22, 23, 151, 318);
+		getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		btnInsertar = new JButton("CALCULAR PRUDUCCION");
+		btnInsertar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+		        
+		            try {
+						calcularProduccion();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		          }
+
+			
+			
+		});
+		                                        
+
+		btnInsertar.setBounds(10, 27, 121, 54);
+		panel.add(btnInsertar);
+		
+		btnActualizar = new JButton("ACTUALIZAR");
+		btnActualizar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				actualizar();
+				limpiarFormulario();
+			}
+		});
+		btnActualizar.setBounds(10, 102, 121, 54);
+		panel.add(btnActualizar);
+		
+	    btnEliminar = new JButton("ELIMINAR");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					eliminar();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnEliminar.setBounds(10, 243, 121, 54);
+		panel.add(btnEliminar);
+		
+		btnBuscar = new JButton("BUSCAR");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					consultar();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnBuscar.setBounds(10, 167, 121, 54);
+		panel.add(btnBuscar);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(183, 210, 557, 131);
+		getContentPane().add(panel_1);
+		panel_1.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBorder(null);
+		scrollPane.setBounds(10, 11, 537, 120);
+		panel_1.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"comlum1", "colum2", "colum3", "colum4","colum5"
+			}
+		));
+		table.setBounds(0, 0, 537,120);
+		
+		String[] titulostabla =new String[] {"ID PLANTA","TIPO ENERGIA","CAPACIDAD","AÑO","PAIS"};
+		tableModel.setColumnIdentifiers(titulostabla);
+		table.setModel(tableModel);
+		
+	
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(205, 54, 617, 145);
+		getContentPane().add(panel_2);
+		panel_2.setLayout(null);
+		
+		textIdPlanta = new JTextField();
+		textIdPlanta.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				btnBuscar.setEnabled(true);
+				btnActualizar.setEnabled(true);
+	            btnEliminar.setEnabled(true);
+	            btnInsertar.setEnabled(true);
+			}
+		});
+		textIdPlanta.setBorder(null);
+		textIdPlanta.setBounds(114, 5, 46, 26);
+		panel_2.add(textIdPlanta);
+		textIdPlanta.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("ID");
+		lblNewLabel_1.setBounds(34, 11, 24, 14);
+		panel_2.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("TIPO ENERGIA");
+		lblNewLabel_2.setBounds(34, 42, 80, 25);
+		panel_2.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("PAIS");
+		lblNewLabel_3.setBounds(284, 11, 46, 14);
+		panel_2.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("CAPACIDAD");
+		lblNewLabel_4.setBounds(34, 91, 75, 14);
+		panel_2.add(lblNewLabel_4);
+		
+		textCapacidad = new JTextField();
+		textCapacidad.setBorder(null);
+		textCapacidad.setBounds(114, 88, 86, 20);
+		panel_2.add(textCapacidad);
+		textCapacidad.setColumns(10);
+		
+		JLabel lblNewLabel_5 = new JLabel("PRODUCCION MENSUAL");
+		lblNewLabel_5.setBounds(415, 8, 151, 20);
+		panel_2.add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_6 = new JLabel("PRODUCCION ANUAL");
+		lblNewLabel_6.setBounds(415, 69, 151, 20);
+		panel_2.add(lblNewLabel_6);
+		
+	    combxTipoEnergia = new JComboBox<>();
+	    combxTipoEnergia.setToolTipText("");
+		combxTipoEnergia.setBounds(114, 43, 75, 22);
+		panel_2.add(combxTipoEnergia);
+		
+		
+	    listPais = new JList();
+	    listPais.setBounds(104, 42, 51, 90);
+	    JScrollPane scrollLista = new JScrollPane();
+		scrollLista.setBounds(260, 42, 110, 66);
+		//panel_2.add(listPais);
+		scrollLista.setViewportView(listPais);
+		panel_2.add(scrollLista);
+		
+		textProducMensual = new JTextField();
+		textProducMensual.setBounds(415, 39, 86, 20);
+		panel_2.add(textProducMensual);
+		textProducMensual.setColumns(10);
+		
+		textProducAnual = new JTextField();
+		textProducAnual.setBounds(415, 100, 86, 20);
+		panel_2.add(textProducAnual);
+		textProducAnual.setColumns(10);
+		
+		llenarLista();
+		inicializarBotonera();
+		
+		llenarCombos();
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBounds(284, 11, 314, 32);
+		getContentPane().add(panel_3);
+		
+		JLabel lblNewLabel = new JLabel("FORMULARIO PRODUCCIÓN");
+		panel_3.add(lblNewLabel);
+		vistaListarPlanta();
+	}
+	
+	public void vistaListarPlanta() throws SQLException{ 
+        tableModel.setRowCount(0); // Limpiar la tabla
+        
+        List<Object[]> listado = plantaController.listarPlantaTabla();
+        for (Object[]fila : listado) {
+        	tableModel.addRow(fila);
+        }
+    }
+	
+	private void calcularProduccion() throws SQLException {
+		 int  id =Integer.parseInt(textIdPlanta.getText());        
+	        produccion = produccionController.producionHidraulicaAnual(id);
+	        
+	        if (produccion  == null) {
+	            JOptionPane.showMessageDialog(this, "ID NO ENCONTRADO");
+	        } else {
+	            textCapacidad.setText(String.valueOf(produccion.getCapacidad()));
+	            listPais.setSelectedValue(pais.getIdpais(), closable);
+	            combxTipoEnergia.setSelectedItem(produccion.getId_tipoEnergia());
+	            textProducAnual.setText(String.valueOf(produccion.produccionHidraulicaAnual(id)));
+	            textProducMensual.setText(String.valueOf(produccion.produccionHidraulicaMensual(id)));
+	            TipoEnergia item= comboMap.get(produccion.getId_tipoEnergia());
+	            Pais itemPais= comboMapPais.get(pais.getIdpais());
+	            
+	           
+	            if (item != null) {
+	            	
+	            	combxTipoEnergia.setSelectedItem(item);
+	        	
+	            }
+	            
+	           if (itemPais != null) {
+	            	
+	            	listPais.setSelectedValue(itemPais, closable);
+	            	System.out.print(listPais);
+	        	
+	            }else { 
+	            	System.out.print("es null");
+	            }
+	            
+	            btnActualizar.setEnabled(true);
+	            btnEliminar.setEnabled(true);
+	            btnInsertar.setEnabled(true);
+	        }
+		
+	}
+	private void consultar() throws SQLException {        
+        int  id =Integer.parseInt(textIdPlanta.getText());        
+        planta = plantaController.consultarPlanta(id);
+        if (planta  == null) {
+            JOptionPane.showMessageDialog(this, "ID NO ENCONTRADO");
+        } else {
+            textCapacidad.setText(String.valueOf(planta.getCapacidad()));
+            listPais.setSelectedValue(pais.getNombre(), closable);
+            combxTipoEnergia.setSelectedItem(planta.getId_tipoEnergia());
+           
+            TipoEnergia item= comboMap.get(planta.getId_tipoEnergia());
+            Pais itemPais= comboMapPais.get(pais.getNombre());
+           
+            if (item != null) {
+            	
+            	combxTipoEnergia.setSelectedItem(item);
+        	
+            }
+            
+           if (itemPais != null) {
+            	
+            	listPais.setSelectedValue(itemPais, closable);
+            	System.out.print(listPais);
+        	
+            }else { 
+            	System.out.print("es null");
+            }
+            
+            btnActualizar.setEnabled(true);
+            btnEliminar.setEnabled(true);
+            btnInsertar.setEnabled(false);
+        }
+    }
+	
+	
+	
+	private void llenarCombos() throws SQLException {        
+		 List<TipoEnergia> listado = tipoEnergiaController.listarTipoEnergia();
+        for (TipoEnergia item : listado) {
+        	combxTipoEnergia.addItem(item);
+            comboMap.put(item.getId_tipoEnergia(), item);
+        }
+       
+    }
+	
+	private void llenarLista() throws SQLException {        
+		 List<Pais> listado = PaisController.listarRegion();
+		 DefaultListModel modelo = new DefaultListModel();
+       
+		 for (Pais item : listado) {
+    	   modelo.addElement(item);
+    	   listPais.setModel(modelo);
+    	   comboMapPais.put(item.getIdpais(), item);
+       }
+      
+   }
+	
+	
+	private void insertar() {
+        double capacidad = Double.parseDouble(textCapacidad.getText());
+        Date date= new Date (System.currentTimeMillis());
+        java.sql.Date año = new java.sql.Date(date.getTime());
+        TipoEnergia fkSelecionada=(TipoEnergia)combxTipoEnergia.getSelectedItem();
+        int tipoEnergia = fkSelecionada.getId_tipoEnergia();
+        Pais fkpais=(Pais) listPais.getSelectedValue();
+        int pais= fkpais.getIdpais();
+        Planta planta= new Planta(0, capacidad,año,tipoEnergia,null);
+        Pais Pais= new Pais(pais,null);
+        try {
+            plantaController.agregarPlanta(planta, Pais);
+            JOptionPane.showMessageDialog(this, "la Planta fue agregado");
+            vistaListarPlanta();
+            limpiarFormulario(); 
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+	
+	private void actualizar() {
+        int id = Integer.parseInt(textIdPlanta.getText());
+        double capacidad =Double.parseDouble(textCapacidad.getText()) ;
+        Planta planta = new Planta(id, capacidad,null,0,null);
+        try {
+            plantaController.actualizarPlanta(planta);
+            JOptionPane.showMessageDialog(this, "Capacidad Actualizado");
+            vistaListarPlanta();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+	private void eliminar() throws SQLException {
+        int id = Integer.parseInt(textIdPlanta.getText());
+        plantaController.eliminarPlanta(id);        
+        this.limpiarFormulario();
+        vistaListarPlanta();
+        JOptionPane.showMessageDialog(this, "Registro eliminado exitosamente");
+    }
+
+
+	private boolean validarVacios() {
+	       boolean validado = false;
+	       if (!textCapacidad.getText().trim().isEmpty())
+	               validado = true;
+	       return validado;
+	    }
+	private void limpiarFormulario(){
+		textIdPlanta.setText("");
+		//textPais.setText("");
+		textCapacidad.setText("");
+        inicializarBotonera();
+    } 
+	
+	private void inicializarBotonera(){       
+		btnInsertar.setEnabled(true);
+        btnActualizar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnBuscar.setEnabled(false);
+    }
+}

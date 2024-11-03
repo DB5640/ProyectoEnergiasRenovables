@@ -9,5 +9,6 @@ public class Coleccion extends Pais {
     public void calcularProduccionTotal(){}
 
     public void calcularConsumoTotal(){}
+    
     public void calcularEmisionesTotal(){}
 }

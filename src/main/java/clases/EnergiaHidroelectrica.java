@@ -7,4 +7,13 @@ public double caudal;
 public double rendimiento;
 public int numeroTurbinas;
 
+
+
+
+
+
+
 }
+
+
+

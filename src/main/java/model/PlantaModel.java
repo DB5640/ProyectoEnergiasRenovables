@@ -31,9 +31,9 @@ public class PlantaModel {
 		
      List<Object[]> lista = new ArrayList<>();
     // String query = "SELECT * FROM planta";
-     String query ="SELECT id_planta,tipo.nombre_tipoenergia as nombreenergia, capacidad, anio_planta, regi.nombre_region as nombreregion "
-     		+ " FROM planta as plan, region as regi, tipoenergia as tipo  WHERE id_planta = regi.id_region and id_planta = tipo.id_tipoenergia "
-     		+ " and plan.id_planta = plan.id_planta ";
+     String query ="SELECT id_planta,t.nombre_tipoenergia as nombreenergia, capacidad, anio_planta, r.nombre_region as nombreregion "
+     		+ " FROM planta as p, region as r, tipoenergia as t  WHERE p.id_region = r.id_region and p.id_tipoenergia = t.id_tipoenergia "
+     		+ " and p.id_planta = p.id_planta ";
      Statement st = connection.createStatement();
      ResultSet rs = st.executeQuery(query);
 
@@ -82,15 +82,12 @@ public class PlantaModel {
 		}
 	
 	public Planta consultarPlanta(int id) throws SQLException {
-        //String query = "SELECT * FROM planta WHERE id_planta = ?";
-		/*String query= "SELECT id_planta,capacidad,anio_planta,nombre_region,nombre_tipoenergia "
-				+ "FROM planta as pla,region as regi,tipoenergia as tipen where pla.id_planta = tipen.id_tipoenergia AND  pla.id_planta = regi.id_region"
-				+ "AND id_planta = ?";*/
-		String query = "SELECT id_planta, capacidad, anio_planta, nombre_region, nombre_tipoenergia,tipen.id_tipoenergia " +
-	               "FROM planta AS pla " +
-	               "JOIN region AS regi ON pla.id_planta = regi.id_region " +
-	               "JOIN tipoenergia AS tipen ON pla.id_planta = tipen.id_tipoenergia " +
-	               "WHERE id_planta = ?";
+        
+		String query = "SELECT id_planta, capacidad, anio_planta,p.id_region,nombre_region,nombre_tipoenergia,t.id_tipoenergia " +
+	                   "FROM planta AS p "+
+	                   "JOIN region AS r ON r.id_region= p.id_region " +
+                       "JOIN tipoenergia AS t ON t.id_tipoenergia= p.id_tipoenergia "+
+	                   "where id_planta= ?";
 
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, id);
@@ -101,7 +98,6 @@ public class PlantaModel {
             Date año =resultSet.getDate("anio_planta");
             String tipoenergia = resultSet.getString("nombre_tipoenergia");
             String nombreRegion=resultSet.getString("nombre_region");
-            System.out.print(nombreRegion);
             int idTipoEnergia =resultSet.getInt("id_tipoenergia");
             Planta planta = new Planta(0,capacidad,año,idTipoEnergia,tipoenergia);
             Pais region = new Pais(0,nombreRegion);

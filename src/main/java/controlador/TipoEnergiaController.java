@@ -28,11 +28,11 @@ public class TipoEnergiaController {
         return tipoEnergiaModel.consultarTipoEnergia(idTipoEnergia);
     }
 
-	public void agregarTipoEnergia(TipoEnergia pais) throws SQLException {
-        tipoEnergiaModel.agregarTipoEnergia(pais);
+	public void agregarTipoEnergia(TipoEnergia tipoEnergia) throws SQLException {
+        tipoEnergiaModel.agregarTipoEnergia(tipoEnergia);
     }
-	public void actualizarTipoEnergia(TipoEnergia pais) throws SQLException {
-        tipoEnergiaModel.actualizarTipoEnergia(pais);
+	public void actualizarTipoEnergia(TipoEnergia tipoEnergia) throws SQLException {
+        tipoEnergiaModel.actualizarTipoEnergia(tipoEnergia);
     }
 	
 	public void eliminarTipoEnergia(int id) throws SQLException {

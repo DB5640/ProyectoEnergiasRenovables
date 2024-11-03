@@ -16,11 +16,13 @@ public class Pais  {
 		super();
 		this.idPais = idPais;
 		this.nombre = nombre;
+		
 	}
 
 
 
 	public int getIdpais() {
+		 
 		return idPais;
 	}
 

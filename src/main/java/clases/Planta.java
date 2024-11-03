@@ -27,31 +27,13 @@ public class Planta extends TipoEnergia {
 		super();
 	}
 
-
-
 	public String getNombreEnergia() {
 		return nombreEnergia;
 	}
 
-
-
-
-
-
-
-
-
 	public void setNombreEnergia(String nombreEnergia) {
 		this.nombreEnergia = nombreEnergia;
 	}
-
-
-
-
-
-
-
-
 
 	public double getCapacidad() {
 		return capacidad;

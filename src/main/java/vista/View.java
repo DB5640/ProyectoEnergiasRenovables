@@ -123,6 +123,23 @@ public class View extends JFrame {
 			});
 			mnNewMenu.add(item3);
 			
+			  JMenuItem item4= new JMenuItem("FORMULARIO PRODUCCION");
+				
+				item4.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						VistaProduccion vistaProduccion= null;
+						try {
+							vistaProduccion = new VistaProduccion();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						escritorio.add(vistaProduccion);
+						vistaProduccion.show();
+					}
+				});
+				mnNewMenu.add(item4);
+				
 			
 		
 	}
