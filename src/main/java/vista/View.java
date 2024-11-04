@@ -62,12 +62,16 @@ public class View extends JFrame {
 		escritorio.add(lblNewLabel);
 		
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(30, 15, 80, 25);
+		menuBar.setBounds(64, 22, 136, 25);
 		menuBar.setEnabled(false);
 		contentPane.add(menuBar);
 		
-		JMenu mnNewMenu = new JMenu("Energias");
-		menuBar.add(mnNewMenu);
+		JMenu MenuEnergia = new JMenu("Energias");
+		menuBar.add(MenuEnergia);
+		
+		JMenu MenuGrafica = new JMenu("Graficas");
+		menuBar.add(MenuGrafica);
+		
 		
 		JMenuItem item1= new JMenuItem("FORMULARIO PAIS");
 		
@@ -85,7 +89,7 @@ public class View extends JFrame {
 				
 			}
 		});
-		mnNewMenu.add(item1);
+		MenuEnergia.add(item1);
 		
        JMenuItem item2= new JMenuItem("FORMULARIO PLANTA");
 		
@@ -104,7 +108,7 @@ public class View extends JFrame {
 				
 			}
 		});
-		mnNewMenu.add(item2);
+		MenuEnergia.add(item2);
 		
 		  JMenuItem item3= new JMenuItem("FORMULARIO TIPO ENERGIA");
 			
@@ -121,7 +125,7 @@ public class View extends JFrame {
 					vistaTipoEnergia.show();
 				}
 			});
-			mnNewMenu.add(item3);
+			MenuEnergia.add(item3);
 			
 			  JMenuItem item4= new JMenuItem("FORMULARIO PRODUCCION");
 				
@@ -138,9 +142,27 @@ public class View extends JFrame {
 						vistaProduccion.show();
 					}
 				});
-				mnNewMenu.add(item4);
+				MenuEnergia.add(item4);
+				
 				
 			
+				JMenuItem grafica= new JMenuItem("GRAFICAS");
+				
+			    grafica.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						VistaGraficas vistaGrafica= null;
+						try {
+							vistaGrafica = new VistaGraficas();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						escritorio.add(vistaGrafica);
+						vistaGrafica.show();
+						
+					}
+				});
+				MenuGrafica.add(grafica);
 		
 	}
 }
