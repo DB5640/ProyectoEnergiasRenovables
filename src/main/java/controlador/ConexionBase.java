@@ -3,19 +3,30 @@ package controlador;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
-public class ConexionBase {
+public class ConexionBase{
 	
 	private static Connection connection;
-	
+
 	   public static Connection getConenction() {
-	        if(connection == null) {
-	        	
+		   String pass = System.getenv("DBPass") == null ? "" : System.getenv("DBPass");
+		   String schema = System.getenv("SCHEMA") == null ? "energiarenovable" : System.getenv("SCHEMA");
+		   return getConnection(pass, schema);
+	    }
+
+    public static Connection getConnection(String pass, String schema) {
+
+		   if(connection == null) {
 	        	try {
-	        		
-	        		connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/energiarenovable?serverTimezone=UTC","root","");
-	        	}catch (SQLException e) {
-	        		e.printStackTrace();
+	        		connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+schema+"?serverTimezone=UTC","root",pass);
+                    if (connection != null) {
+                        System.out.println("Conectado");
+                    } else {
+                      throw new SQLException("No se pudo conectar");
+                    }
+                }catch (SQLException e) {
+					Logger.getLogger(ConexionBase.class.getName()).warning(e.getMessage());
 	        	}
 	        }
 	        return connection;
