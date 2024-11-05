@@ -21,7 +21,7 @@ public class ConexionBase{
 	        	try {
 	        		connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+schema+"?serverTimezone=UTC","root",pass);
                     if (connection != null) {
-                        System.out.println("Conectado");
+                        System.out.println("Se conectó exitosamente a la base de datos: "+schema);
                     } else {
                       throw new SQLException("No se pudo conectar");
                     }

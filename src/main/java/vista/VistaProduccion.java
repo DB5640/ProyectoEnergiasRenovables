@@ -212,6 +212,7 @@ public class VistaProduccion extends JInternalFrame {
 		panel_2.add(textCapaPais);
 		textCapaPais.setColumns(10);
 		
+
 		llenarLista();
 		//inicializarBotonera();
 		
@@ -349,7 +350,7 @@ public class VistaProduccion extends JInternalFrame {
 	            textProducMensual.setText(String.valueOf(produccion.produccionMensual(idPais)));
 	            TipoEnergia item= comboMap.get(produccion.getId_tipoEnergia());
 	            Pais itemPais= comboMapPais.get(pais.getIdpais());
-	            
+
 	           
 	            if (item != null) {
 	            	

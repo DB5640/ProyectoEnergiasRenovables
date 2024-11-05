@@ -56,12 +56,14 @@ public class VistaPlanta extends JInternalFrame {
     private RegionController PaisController;
     private TipoEnergiaController tipoEnergiaController;
     private static TipoEnergia energia = new TipoEnergia(); 
-    private List<TipoEnergia> listaenergia;    
+    private List<TipoEnergia> listaenergia;
+	JScrollPane scrollLista = new JScrollPane();
    
     // Primero, un Map para almacenar los objetos por su PK
     Map<Integer, TipoEnergia> comboMap = new HashMap<>();
     Map<Integer, Pais> comboMapPais = new HashMap<>();
     private JTextField textAño;
+    private JLabel txtPais;
 
    
 	public static void main(String[] args) {
@@ -188,7 +190,15 @@ public class VistaPlanta extends JInternalFrame {
 		panel_2.setBounds(205, 54, 557, 145);
 		getContentPane().add(panel_2);
 		panel_2.setLayout(null);
-		
+
+
+		listPais = new JList();
+		listPais.setBounds(104, 42, 51, 90);
+		scrollLista.setBounds(260, 42, 110, 66);
+		//panel_2.add(listPais);
+		scrollLista.setViewportView(listPais);
+		panel_2.add(scrollLista);
+
 		textIdPlanta = new JTextField();
 		textIdPlanta.addKeyListener(new KeyAdapter() {
 			@Override
@@ -197,19 +207,22 @@ public class VistaPlanta extends JInternalFrame {
 				btnActualizar.setEnabled(false);
 	            btnEliminar.setEnabled(false);
 	            btnInsertar.setEnabled(false);
+//				scrollLista.setVisible(false);
+				combxTipoEnergia.setEnabled(false);
+				textCapacidad.setEnabled(false);
 			}
 		});
 		textIdPlanta.setBorder(null);
-		textIdPlanta.setBounds(114, 5, 46, 26);
+		textIdPlanta.setBounds(146, 10, 46, 26);
 		panel_2.add(textIdPlanta);
 		textIdPlanta.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("ID");
-		lblNewLabel_1.setBounds(34, 11, 24, 14);
+		JLabel lblNewLabel_1 = new JLabel("BUSCAR POR ID");
+		lblNewLabel_1.setBounds(34, 11, 150, 14);
 		panel_2.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("TIPO ENERGIA");
-		lblNewLabel_2.setBounds(34, 42, 80, 25);
+		lblNewLabel_2.setBounds(34, 42, 150, 25);
 		panel_2.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("PAIS");
@@ -222,7 +235,7 @@ public class VistaPlanta extends JInternalFrame {
 		
 		textCapacidad = new JTextField();
 		textCapacidad.setBorder(null);
-		textCapacidad.setBounds(114, 88, 86, 20);
+		textCapacidad.setBounds(146, 93, 86, 20);
 		panel_2.add(textCapacidad);
 		textCapacidad.setColumns(10);
 		
@@ -238,18 +251,14 @@ public class VistaPlanta extends JInternalFrame {
 		
 	    combxTipoEnergia = new JComboBox<>();
 	    combxTipoEnergia.setToolTipText("");
-		combxTipoEnergia.setBounds(114, 43, 75, 22);
+		combxTipoEnergia.setBounds(146, 48, 104, 22);
 		panel_2.add(combxTipoEnergia);
 		
-		
-	    listPais = new JList();
-	    listPais.setBounds(104, 42, 51, 90);
-	    JScrollPane scrollLista = new JScrollPane();
-		scrollLista.setBounds(260, 42, 110, 66);
-		//panel_2.add(listPais);
-		scrollLista.setViewportView(listPais);
-		panel_2.add(scrollLista);
-		
+		txtPais = new JLabel();
+		txtPais.setBounds(260, 35, 96, 19);
+		panel_2.add(txtPais);
+
+
 		llenarLista();
 		inicializarBotonera();
 		
@@ -280,30 +289,29 @@ public class VistaPlanta extends JInternalFrame {
             JOptionPane.showMessageDialog(this, "ID NO ENCONTRADO");
         } else {
             textCapacidad.setText(String.valueOf(planta.getCapacidad()));
-            listPais.setSelectedValue(Pais.getNombre(), closable);
+			txtPais.setText(String.valueOf(planta.region));
+            listPais.setSelectedValue(planta.region, closable);
             combxTipoEnergia.setSelectedItem(planta.getId_tipoEnergia());
            
             TipoEnergia item= comboMap.get(planta.getId_tipoEnergia());
-            Pais itemPais= comboMapPais.get(Pais.getNombre());
-            System.out.println(Pais.getNombre());
+            Pais itemPais= comboMapPais.get(planta.region);
+            System.out.println("El nombre del pais es: "+planta.region);
             if (item != null) {
             	
             	combxTipoEnergia.setSelectedItem(item);
         	
             }
             
-           if (itemPais != null) {
-            	
-            	listPais.setSelectedValue(itemPais, closable);
-            	System.out.print(listPais);
-        	
-            }else { 
-            	System.out.print("es null");
-            }
+
             
             btnActualizar.setEnabled(true);
             btnEliminar.setEnabled(true);
             btnInsertar.setEnabled(false);
+			textCapacidad.setEnabled(true);
+			txtPais.setVisible(true);
+			scrollLista.setVisible(false);
+			listPais.setVisible(false);
+
         }
     }
 	

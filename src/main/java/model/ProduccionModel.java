@@ -55,8 +55,7 @@ public class ProduccionModel {
 	
 	public Produccion produccionPorPaisModel(int id)throws SQLException {
 		
-		 String query = " SELECT id_planta,SUM(capacidad)as sumCapacidad, anio_planta,p.id_region,nombre_region "
-		 		+ "FROM planta as p join region as r on p.id_region=r.id_region WHERE r.id_region= ?";
+		 String query = " SELECT id_planta,SUM(capacidad) as sumCapacidad, anio_planta,p.id_region,nombre_region FROM planta as p join region as r on p.id_region=r.id_region WHERE r.id_region= ?  GROUP BY  id_planta, anio_planta,p.id_region,nombre_region";
 	     PreparedStatement statement = connection.prepareStatement(query);
 	     statement.setInt(1, id);
 	     ResultSet resultSet = statement.executeQuery();

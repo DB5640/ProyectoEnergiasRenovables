@@ -9,6 +9,7 @@ public class Planta extends TipoEnergia {
     private int id_planta;
     public Date año;
     String nombreEnergia;
+	public String region;
     
     
 	public Planta( int id_planta,double capacidad, Date año,int id_tipoEnergia,String nombreEnergia) {
@@ -18,6 +19,14 @@ public class Planta extends TipoEnergia {
 		this.año = año;
 		this.nombreEnergia= nombreEnergia;
 		
+	}
+	public Planta( int id_planta,double capacidad, Date año,int id_tipoEnergia,String nombreEnergia, String region) {
+		super(id_tipoEnergia,nombreEnergia);
+		this.capacidad = capacidad;
+		this.id_planta = id_planta;
+		this.año = año;
+		this.nombreEnergia= nombreEnergia;
+		this.region= region;
 	}
 
 	
